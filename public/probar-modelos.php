@@ -2,29 +2,26 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../src/modelos/Categoria.php';
-require_once __DIR__ . '/../src/modelos/Producto.php';
+require_once __DIR__ . '/../src/repositorios/RepositorioProductos.php';
 
-$rpg = new Categoria('RPG');
-$accion = new Categoria('Acción');
+$repo = new RepositorioProductos();
+$juegos = $repo->obtenerTodos();
 
-echo $rpg->obtenerNombre() . '<br>';
-echo $accion->obtenerNombre() . '<br>';
+echo 'Total de juegos cargados: ' . count($juegos) . '<br>';
+
+foreach ($juegos as $juego) {
+    $estado = $juego->estaDisponible() ? 'Disponible' : 'Agotado';
+    echo $juego->obtenerId() . ' - ' . $juego->obtenerNombre()
+        . ' (' . $juego->obtenerPrecioFormateado() . ') [' . $estado . ']<br>';
+}
+
 echo '----------------------------------------<br>';
 
-$juego = Producto::desdeArreglo([
-    'id' => 1,
-    'nombre' => 'Elden Ring',
-    'categoria' => 'RPG',
-    'precio' => 1299.00,
-    'descripcion' => 'RPG de acción y fantasía oscura en mundo abierto.',
-    'stock' => 15,
-    'imagen' => 'https://placehold.co/200x150?text=Elden+Ring',
-]);
+$uno = $repo->buscarPorId(1);
+echo 'Buscado ID 1: ' . $uno->obtenerNombre() . '<br>';
 
-echo $juego->obtenerNombre()
-    . ' (' . $juego->obtenerCategoria()->obtenerNombre() . ')'
-    . ' y cuesta ' . $juego->obtenerPrecioFormateado()
-    . '<br>';
-
-echo $juego->estaDisponible() ? 'Existe producto' : 'Agotado';
+try {
+    $repo->buscarPorId(999);
+} catch (Throwable $e) {
+    echo 'Excepción esperada al buscar ID 999: ' . $e->getMessage();
+}

@@ -9,37 +9,43 @@ class Producto
     private const CAMPOS_OBLIGATORIOS = [
         'id',
         'nombre',
-        'categoria',
+        'desarrolladora',
+        'genero',
+        'plataforma',
         'precio',
         'descripcion',
         'stock',
-        'imagen',
     ];
 
     private int $id;
     private string $nombre;
+    private string $desarrolladora;
     private Categoria $categoria;
+    private string $genero;
+    private string $plataforma;
     private float $precio;
     private string $descripcion;
     private int $stock;
-    private string $imagen;
 
     private function __construct(
         int $id,
         string $nombre,
-        Categoria $categoria,
+        string $desarrolladora,
+        string $genero,
+        string $plataforma,
         float $precio,
         string $descripcion,
-        int $stock,
-        string $imagen
+        int $stock
     ) {
         $this->id = $id;
         $this->nombre = $nombre;
-        $this->categoria = $categoria;
+        $this->desarrolladora = $desarrolladora;
+        $this->genero = $genero;
+        $this->categoria = new Categoria($genero);
+        $this->plataforma = $plataforma;
         $this->precio = $precio;
         $this->descripcion = $descripcion;
         $this->stock = $stock;
-        $this->imagen = $imagen;
     }
 
     private static function exigirCampos(array $registro): void
@@ -58,11 +64,12 @@ class Producto
         return new Producto(
             (int) $registro['id'],
             (string) $registro['nombre'],
-            new Categoria((string) $registro['categoria']),
+            (string) $registro['desarrolladora'],
+            (string) $registro['genero'],
+            (string) $registro['plataforma'],
             (float) $registro['precio'],
             (string) $registro['descripcion'],
-            (int) $registro['stock'],
-            (string) $registro['imagen']
+            (int) $registro['stock']
         );
     }
 
@@ -76,9 +83,24 @@ class Producto
         return $this->nombre;
     }
 
+    public function obtenerDesarrolladora(): string
+    {
+        return $this->desarrolladora;
+    }
+
+    public function obtenerGenero(): string
+    {
+        return $this->genero;
+    }
+
     public function obtenerCategoria(): Categoria
     {
         return $this->categoria;
+    }
+
+    public function obtenerPlataforma(): string
+    {
+        return $this->plataforma;
     }
 
     public function obtenerPrecio(): float
@@ -94,11 +116,6 @@ class Producto
     public function obtenerStock(): int
     {
         return $this->stock;
-    }
-
-    public function obtenerImagen(): string
-    {
-        return $this->imagen;
     }
 
     public function estaDisponible(): bool

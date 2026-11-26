@@ -1,4 +1,3 @@
-
 [
   {
     "id": 1,
@@ -49,5 +48,15 @@
     "precio": 399,
     "descripcion": "Enfrenta a poderosos luchadores en combates intensos, domina sus habilidades especiales y participa en una historia llena de rivalidades.",
     "stock": 9
+  },
+  {
+    "id": 6,
+    "nombre": "Monster Hunter Rise: Sunbreak",
+    "desarrolladora": "Capcom",
+    "genero": "Acción / rol",
+    "plataforma": "Nintendo Switch / PC",
+    "precio": 1099,
+    "descripcion": "Caza monstruos colosales con distintas armas y estilos de combate en una expansión llena de nuevas zonas, criaturas y misiones.",
+    "stock": 0
   }
 ]
