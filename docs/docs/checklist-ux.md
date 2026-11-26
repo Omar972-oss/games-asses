@@ -16,3 +16,30 @@ Tareas evaluadas: (a) encontrar un producto de la categoría Periféricos, (b) a
 | 10 | Estructura del documento | Sin `<!DOCTYPE html>`, `lang`, `meta charset` ni `meta viewport` | 2 | Agrega los cuatro en todas las vistas | No |
 | 11 | H8 Diseño minimalista | Pie de página pegado al borde y `<section>` sin cerrar en el formulario | 1 | Agrega `padding` al pie y cierra la sección | No |
 | 12 | H1 Visibilidad del estado | Formulario: al enviar no hay confirmación (`action="#"`) | 3 | Se resuelve con servidor en U3; anótalo como pendiente | No |
+
+
+# Checklist de Usabilidad y Heurísticas de Nielsen — Proyecto Personal
+
+## 1. Tareas Evaluadas (Escritorio y Móvil)
+1. **Tarea 1:** Navegar desde la página principal (`index.php`) hacia el catálogo completo (`productos.php`) e identificar en qué sección se encuentra el usuario.
+2. **Tarea 2:** Seleccionar un videojuego o artículo del catálogo para consultar su ficha (`producto-detalle.php`) y regresar al listado sin perder ubicación.
+3. **Tarea 3:** Acceder a la vista de contacto (`contacto.php`), completar el formulario con validaciones básicas y enviar una consulta.
+
+---
+
+## 2. Registro de Hallazgos y Mejoras
+
+| ID | Heurística / Criterio | Ubicación | Hallazgo Detectado | Severidad (0-4) | Prioridad | Acción de Mejora Aplicada |
+| :--- | :--- | :--- | :--- | :---: | :---: | :--- |
+| **H-01** | **H4: Consistencia y estándares** | `public/producto-detalle.php` | Verificar y asegurar la carga consistente de la hoja de estilos principal `assets/css/estilos.css` para evitar vistas sin formato al entrar desde el catálogo. | **4** | Alta | Enlazar `<link rel="stylesheet" href="assets/css/estilos.css">` dentro de `<head>` en todas las vistas. |
+| **H-02** | **H1: Visibilidad del estado del sistema** | Menú `<nav>` en `index.php`, `productos.php`, `producto-detalle.php`, `contacto.php` | El menú superior no resalta visualmente en qué sección se encuentra el usuario (ni mantiene marcada la sección de catálogo al ver la ficha de un juego). | **3** | Alta | Agregar `aria-label="principal"` al `<nav>`, aplicar `aria-current="page"` en el enlace activo de cada vista y estilizar `nav a[aria-current="page"]` en `estilos.css`. |
+| **H-03** | **Estándar HTML / Estructura base** | Todas las vistas `.php` | Falta declarar explícitamente `<!DOCTYPE html>`, idioma español (`lang="es"`), codificación `UTF-8` y configuración `viewport` para dispositivos móviles. | **2** | Media | Incorporar `<!DOCTYPE html>`, `<html lang="es">`, `<meta charset="UTF-8">` y `<meta name="viewport" content="width=device-width, initial-scale=1.0">` en el encabezado de cada vista. |
+| **H-04** | **H5: Prevención de errores / H9: Recuperación de errores** | `public/contacto.php` | El formulario de contacto permite enviar campos vacíos o formatos de correo inválidos sin retroalimentación clara antes del envío. | **3** | Alta | Añadir atributos HTML5 (`required`, `type="email"`, `minlength`) y mensajes descriptivos en español para guiar al usuario al corregir datos. |
+| **H-05** | **H3: Control y libertad del usuario** | `public/producto-detalle.php` | Al revisar la ficha detallada de un juego, el usuario necesita un enlace directo y visible para regresar al catálogo sin depender únicamente del botón "Atrás" del navegador. | **2** | Media | Incluir un botón/enlace claro de regreso a `productos.php` dentro del detalle del artículo. |
+| **H-06** | **H2: Relación entre el sistema y el mundo real** | Menú y encabezados (`productos.php` / `index.php`) | Revisar acentos y etiquetas en español (por ejemplo, `Catálogo` en lugar de `Catalogo`) para mantener lenguaje natural y profesional. | **1** | Baja | Corregir acentuación y ortografía en los enlaces de navegación y títulos visibles. |
+
+---
+
+## 3. Fortalezas Identificadas
+* **Diseño y jerarquía visual (`H8: Diseño estético y minimalista`):** Las tarjetas del catálogo muestran de forma limpia los datos clave del artículo sin saturar la pantalla en vista móvil.
+* **Separación de datos (`datos.json`):** La información de los artículos está centralizada en formato JSON, facilitando su mantenimiento y consistencia entre el catálogo y el detalle.

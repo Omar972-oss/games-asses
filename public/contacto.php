@@ -1,4 +1,3 @@
-
 <?php
 
 $mensaje = "";
@@ -74,6 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     type="text"
                     id="nombre"
                     name="nombre"
+                    minlength="2"
+                    maxlength="80"
                     required
                 >
 
@@ -82,6 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     type="email"
                     id="correo"
                     name="correo"
+                    maxlength="120"
                     required
                 >
 
@@ -90,6 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     type="text"
                     id="asunto"
                     name="asunto"
+                    minlength="3"
+                    maxlength="100"
                     required
                 >
 
@@ -97,6 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <textarea
                     id="mensaje"
                     name="mensaje"
+                    minlength="5"
+                    maxlength="500"
                     required
                 ></textarea>
 

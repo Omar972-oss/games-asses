@@ -1,7 +1,6 @@
-
 <?php
 
-$ruta = __DIR__ . "/../datos/datos.json";
+$ruta = __DIR__ . "/../datos.json/datos.json";
 
 $videojuegos = [];
 

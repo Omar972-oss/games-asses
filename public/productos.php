@@ -1,7 +1,6 @@
-
 <?php
 
-$ruta = __DIR__ . "/../datos/datos.json";
+$ruta = __DIR__ . "/../datos.json/datos.json";
 
 $videojuegos = [];
 $error = "";
@@ -10,10 +9,11 @@ if (file_exists($ruta)) {
     $contenido = file_get_contents($ruta);
 
     if ($contenido !== false) {
-        $videojuegos = json_decode($contenido, true);
+        $datos = json_decode($contenido, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE || !is_array($videojuegos)) {
-            $videojuegos = [];
+        if (json_last_error() === JSON_ERROR_NONE && is_array($datos)) {
+            $videojuegos = $datos;
+        } else {
             $error = "Error al leer los videojuegos.";
         }
     } else {
