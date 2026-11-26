@@ -56,6 +56,16 @@ foreach ($videojuegos as $item) {
 
     <main>
 
+        <nav class="migas" aria-label="Ruta de navegación">
+            <ol>
+                <li><a href="index.php">Inicio</a></li>
+                <li><a href="productos.php">Catálogo</a></li>
+                <li aria-current="page">
+                    <?= $juego ? htmlspecialchars($juego["nombre"]) : "Detalle" ?>
+                </li>
+            </ol>
+        </nav>
+
         <?php if ($juego): ?>
 
             <article class="inicio">

@@ -5,6 +5,10 @@
 
     --color-primary: #a855f7;
     --color-primary-dark: #6b21a8;
+    --color-acento: #7e22ce;
+    --color-error: #f87171;
+    --espaciado-base: 8px;
+
     --color-bg: #12101a;
     --color-surface: #201b2d;
     --color-text: #f5f3ff;
@@ -148,7 +152,9 @@ nav a {
 
 nav a:hover {
     color: white;
-    background-color: var(--color-primary-dark);
+    background-color: var(--color-acento);
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
 nav a[aria-current="page"] {
@@ -161,6 +167,55 @@ nav a[aria-current="page"] {
 nav a:focus-visible {
     outline: 3px solid var(--color-primary);
     outline-offset: 3px;
+}
+
+/* =========================================
+   MIGAS DE PAN (BREADCRUMBS)
+   ========================================= */
+
+nav.migas {
+    background-color: transparent;
+    border-bottom: none;
+    box-shadow: none;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0 0 calc(var(--espaciado-base) * 2) 0;
+}
+
+nav.migas ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espaciado-base);
+    margin: 0;
+    padding: 0;
+    font-size: 0.92rem;
+    color: var(--color-text-muted);
+}
+
+nav.migas li + li::before {
+    content: "/";
+    margin-right: var(--espaciado-base);
+    color: var(--color-text-muted);
+}
+
+nav.migas a {
+    padding: 2px 4px;
+    color: var(--color-primary);
+    border-bottom: none;
+}
+
+nav.migas a:hover {
+    background-color: transparent;
+    color: var(--color-on-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+nav.migas li[aria-current="page"] {
+    color: var(--color-text);
+    font-weight: 600;
 }
 
 /* =========================================
@@ -363,7 +418,7 @@ form {
 
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
 
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -371,6 +426,10 @@ form {
     padding: 30px;
 
     box-shadow: var(--shadow-sm);
+}
+
+.campo {
+    margin-bottom: calc(var(--espaciado-base) * 2);
 }
 
 form label {
@@ -386,7 +445,7 @@ form input[type="number"],
 form textarea,
 form select {
     width: 100%;
-    padding: 12px;
+    padding: var(--espaciado-base) 12px;
 
     color: var(--color-text);
     background-color: var(--color-bg);
@@ -410,7 +469,32 @@ form select:focus-visible {
     outline-offset: 2px;
 }
 
-form button {
+form input:user-invalid,
+form textarea:user-invalid {
+    border-color: var(--color-error);
+}
+
+.ayuda-campo {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 4px 0 0;
+}
+
+.error-campo {
+    display: none;
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: var(--color-error);
+    margin: 4px 0 0;
+}
+
+form input:user-invalid ~ .error-campo,
+form textarea:user-invalid ~ .error-campo {
+    display: block;
+}
+
+form button,
+.boton-enviar {
     align-self: center;
 }
 
