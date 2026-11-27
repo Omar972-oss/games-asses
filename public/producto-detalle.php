@@ -1,139 +1,76 @@
 <?php
 
-$ruta = __DIR__ . "/../datos.json/datos.json";
+declare(strict_types=1);
 
-$videojuegos = [];
+require_once __DIR__ . '/../src/repositorios/RepositorioProductos.php';
+require_once __DIR__ . '/../src/utilidades/vistas.php';
 
-if (file_exists($ruta)) {
-    $contenido = file_get_contents($ruta);
+$repositorio = new RepositorioProductos(__DIR__ . '/../datos.json/datos.json');
+$idSolicitado = filter_var($_GET['id'] ?? '', FILTER_VALIDATE_INT);
 
-    if ($contenido !== false) {
-        $datos = json_decode($contenido, true);
+$producto = null;
+$productoEncontrado = false;
 
-        if (json_last_error() === JSON_ERROR_NONE && is_array($datos)) {
-            $videojuegos = $datos;
-        }
+if ($idSolicitado !== false && $idSolicitado > 0) {
+    try {
+        $producto = $repositorio->buscarPorId((int) $idSolicitado);
+        $productoEncontrado = true;
+    } catch (OutOfBoundsException $error) {
+        $productoEncontrado = false;
+        http_response_code(404);
     }
+} else {
+    http_response_code(404);
 }
-
-$id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
-
-$juego = null;
-
-foreach ($videojuegos as $item) {
-    if (isset($item["id"]) && $item["id"] == $id) {
-        $juego = $item;
-        break;
-    }
-}
-
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameZone - Ficha del videojuego</title>
+    <title><?= $productoEncontrado && $producto !== null ? htmlspecialchars($producto->obtenerNombre(), ENT_QUOTES, 'UTF-8') . ' — GameZone' : 'No encontrado — GameZone' ?></title>
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
-
 <body>
-
     <header>
-        <h1>🎮 Ficha del videojuego</h1>
-        <p>Conoce todos los detalles</p>
+        <h1>GameZone</h1>
+        <nav aria-label="Navegación principal">
+            <a href="index.php">Inicio</a>
+            <a href="productos.php">Catálogo</a>
+            <a href="contacto.php">Contacto</a>
+        </nav>
     </header>
 
-    <nav aria-label="Principal">
-        <ul>
-            <li><a href="index.php">Inicio</a></li>
-            <li><a href="productos.php" aria-current="page">Catálogo</a></li>
-            <li><a href="contacto.php">Contacto</a></li>
-        </ul>
-    </nav>
-
     <main>
-
-        <nav class="migas" aria-label="Ruta de navegación">
-            <ol>
-                <li><a href="index.php">Inicio</a></li>
-                <li><a href="productos.php">Catálogo</a></li>
-                <li aria-current="page">
-                    <?= $juego ? htmlspecialchars($juego["nombre"]) : "Detalle" ?>
-                </li>
-            </ol>
+        <nav class="migas" aria-label="Migas de pan">
+            <a href="index.php">Inicio</a> &gt;
+            <a href="productos.php">Catálogo</a> &gt;
+            <span><?= $productoEncontrado && $producto !== null ? htmlspecialchars($producto->obtenerNombre(), ENT_QUOTES, 'UTF-8') : 'No encontrado' ?></span>
         </nav>
 
-        <?php if ($juego): ?>
-
-            <article class="inicio">
-
-                <h2>
-                    <?= htmlspecialchars($juego["nombre"]) ?>
-                </h2>
-
-                <p>
-                    <strong>Desarrolladora:</strong>
-                    <?= htmlspecialchars($juego["desarrolladora"]) ?>
-                </p>
-
-                <p>
-                    <strong>Género:</strong>
-                    <?= htmlspecialchars($juego["genero"]) ?>
-                </p>
-
-                <p>
-                    <strong>Plataforma:</strong>
-                    <?= htmlspecialchars($juego["plataforma"]) ?>
-                </p>
-
-                <p class="precio">
-                    Precio:
-                    $<?= number_format($juego["precio"], 2) ?> MXN
-                </p>
-
-                <p>
-                    <strong>Stock:</strong>
-                    <?= htmlspecialchars((string)$juego["stock"]) ?>
-                </p>
-
-                <h3>Descripción</h3>
-
-                <p class="descripcion">
-                    <?= htmlspecialchars($juego["descripcion"]) ?>
-                </p>
-
-                <a class="boton" href="productos.php">
-                    ← Regresar al catálogo
-                </a>
-
+        <?php if ($productoEncontrado && $producto !== null): ?>
+            <article class="ficha-producto">
+                <h2><?= htmlspecialchars($producto->obtenerNombre(), ENT_QUOTES, 'UTF-8') ?></h2>
+                <p><strong>Desarrolladora:</strong> <?= htmlspecialchars($producto->obtenerDesarrolladora(), ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Categoría:</strong> <?= htmlspecialchars($producto->obtenerCategoria()->obtenerNombre(), ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Plataforma:</strong> <?= htmlspecialchars($producto->obtenerPlataforma(), ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Precio:</strong> <?= htmlspecialchars($producto->obtenerPrecioFormateado(), ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Disponibilidad:</strong> <?= $producto->estaDisponible() ? 'Disponible' : 'Agotado' ?></p>
+                <p><strong>Descripción:</strong></p>
+                <p><?= htmlspecialchars($producto->obtenerDescripcion(), ENT_QUOTES, 'UTF-8') ?></p>
+                <a href="productos.php">Volver al catálogo</a>
             </article>
-
         <?php else: ?>
-
-            <article class="inicio">
-
+            <section class="mensaje-error">
                 <h2>Videojuego no encontrado</h2>
-
-                <p>
-                    No se encontró el videojuego solicitado.
-                </p>
-
-                <a class="boton" href="productos.php">
-                    Regresar al catálogo
-                </a>
-
-            </article>
-
+                <p>No existe ningún videojuego con el identificador solicitado.</p>
+                <a href="productos.php">Volver al catálogo</a>
+            </section>
         <?php endif; ?>
-
     </main>
 
     <footer>
-        <p>&copy; 2026 GameZone</p>
+        <p>GameZone — Ficha de videojuego</p>
     </footer>
-
 </body>
 </html>

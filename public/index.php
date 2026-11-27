@@ -1,53 +1,50 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../src/repositorios/RepositorioProductos.php';
+require_once __DIR__ . '/../src/utilidades/vistas.php';
+
+$repositorio = new RepositorioProductos(__DIR__ . '/../datos.json/datos.json');
+$destacados = array_slice($repositorio->obtenerTodos(), 0, 3);
+?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameZone - Inicio</title>
+    <title>GameZone — Inicio</title>
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
-
 <body>
-
     <header>
-        <h1>🎮 GameZone</h1>
-        <p>Tu próxima aventura comienza aquí</p>
+        <h1>GameZone</h1>
+        <nav aria-label="Navegación principal">
+            <a href="index.php">Inicio</a>
+            <a href="productos.php">Catálogo</a>
+            <a href="contacto.php">Contacto</a>
+        </nav>
     </header>
 
-    <nav aria-label="Principal">
-        <ul>
-            <li><a href="index.php" aria-current="page">Inicio</a></li>
-            <li><a href="productos.php">Catálogo</a></li>
-            <li><a href="contacto.php">Contacto</a></li>
-        </ul>
-    </nav>
-
     <main>
-        <section class="inicio">
+        <section class="hero">
             <h2>Bienvenido a GameZone</h2>
+            <p>Explora el catálogo de videojuegos, consulta plataformas, precios y disponibilidad.</p>
+            <a href="productos.php">Ver catálogo</a>
+        </section>
 
-            <p>
-                En nuestra tienda encontrarás videojuegos
-                de acción, aventura, carreras y combate
-                para diferentes plataformas.
-            </p>
-
-            <p>
-                Explora nuestro catálogo y descubre títulos
-                como God of War, Avatar, Mario Kart,
-                Alice: Madness Returns y Mortal Kombat X.
-            </p>
-
-            <a class="boton" href="productos.php">
-                Ver catálogo
-            </a>
+        <section class="destacados">
+            <h2>Videojuegos destacados</h2>
+            <section class="tarjetas-productos">
+                <?php foreach ($destacados as $producto): ?>
+                    <?php mostrarTarjetaProducto($producto, 3); ?>
+                <?php endforeach; ?>
+            </section>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 GameZone</p>
+        <p>GameZone — Inicio</p>
     </footer>
-
 </body>
 </html>
