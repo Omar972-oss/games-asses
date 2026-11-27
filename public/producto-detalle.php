@@ -5,18 +5,27 @@ declare(strict_types=1);
 require_once __DIR__ . '/../src/repositorios/RepositorioProductos.php';
 require_once __DIR__ . '/../src/utilidades/vistas.php';
 
+function obtenerIdValidoDesdeGet(array $parametrosGet): ?int
+{
+    $idFiltrado = filter_var($parametrosGet['id'] ?? '', FILTER_VALIDATE_INT);
+    if ($idFiltrado === false || $idFiltrado <= 0) {
+        return null;
+    }
+
+    return (int) $idFiltrado;
+}
+
 $repositorio = new RepositorioProductos(__DIR__ . '/../datos.json/datos.json');
-$idSolicitado = filter_var($_GET['id'] ?? '', FILTER_VALIDATE_INT);
+$idSolicitado = obtenerIdValidoDesdeGet($_GET);
 
 $producto = null;
 $productoEncontrado = false;
 
-if ($idSolicitado !== false && $idSolicitado > 0) {
+if ($idSolicitado !== null) {
     try {
-        $producto = $repositorio->buscarPorId((int) $idSolicitado);
+        $producto = $repositorio->buscarPorId($idSolicitado);
         $productoEncontrado = true;
     } catch (OutOfBoundsException $error) {
-        $productoEncontrado = false;
         http_response_code(404);
     }
 } else {
